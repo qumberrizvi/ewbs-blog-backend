@@ -56,30 +56,16 @@ use TCG\Voyager\Models\Post as VoyagerPost;
  * @property int|null $top_nudge_id
  * @property int|null $bottom_nudge_id
  * @property int $read_count
- * @property-read \App\Models\User|null $author
- * @property-read \App\Models\Nudge|null $bottom_nudge
- * @property-read \App\Models\Nudge|null $top_nudge
+ * @property-read User|null $author
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereBottomNudgeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereReadCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereSchema($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereTopNudgeId($value)
- * @mixin \Eloquent
  */
 class Post extends VoyagerPost
 {
 //    use HasFactory, Searchable;
     use HasFactory;
-
-    function top_nudge(): BelongsTo
-    {
-        return $this->belongsTo(Nudge::class, 'top_nudge_id');
-    }
-
-    function bottom_nudge(): BelongsTo
-    {
-        return $this->belongsTo(Nudge::class, 'bottom_nudge_id');
-    }
-
     function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
