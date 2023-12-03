@@ -13,7 +13,7 @@ class PostController extends Controller
     {
         $limit = $request->get('limit') ?? 15;
         $orderBy = ($request->boolean('popular')) ? 'read_count' : 'created_at';
-        $posts = Post::published()->with(['top_nudge', 'bottom_nudge', 'author', 'category'])
+        $posts = Post::published()->with(['author', 'category'])
             ->orderBy($orderBy, 'desc');
         if ($request->boolean('featured')) {
             $posts = $posts->where('featured', 1);
@@ -24,29 +24,18 @@ class PostController extends Controller
 
     function show($slug): JsonResponse
     {
-        $post = Post::published()->with(['top_nudge', 'bottom_nudge', 'author', 'category'])
+        $post = Post::published()->with(['author', 'category'])
             ->where('slug', $slug)
             ->firstOrFail();
         $post->increment('read_count');
         return response()->json($post);
     }
 
-    function search(Request $request): JsonResponse
-    {
-        $limit = $request->get('limit') ?? 15;
-        $posts = Post::search($request->get('query'))
-            ->query(function ($query) {
-                $query->published()->with(['top_nudge', 'bottom_nudge', 'author', 'category']);
-            })
-            ->paginate($limit);
-        return response()->json($posts);
-    }
-
     function indexByCategory(Request $request, string $slug): JsonResponse
     {
         $limit = $request->get('limit') ?? 15;
         $posts = Post::published()->whereRelation('category', 'slug', $slug)
-            ->with(['top_nudge', 'bottom_nudge', 'author', 'category'])
+            ->with(['author', 'category'])
             ->latest()
             ->paginate($limit);
         return response()->json($posts);

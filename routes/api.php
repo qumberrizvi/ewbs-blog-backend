@@ -21,7 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Api'], function () {
-    Route::get('posts/search', [PostController::class, 'search']);
     Route::apiResource('posts', PostController::class, [
         'only' => ['index', 'show']
     ]);
